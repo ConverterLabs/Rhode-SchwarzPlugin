@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LEDevice DevicePlugin = "TektronixPlugin.dll" DeviceName = "RuSOsci">
+	<Connection IP = "10.0.2.2"/>
+	<Visa>
+<!-- CHANNEL 1-->	
+	    <Connection  DataType="boolean">		
+			<ID> Channel::C1::State </ID>
+			<Command> CHANnel1:STATe </Command> 
+		</Connection>
+		 <Connection  DataType="boolean">		
+			<ID> Channel::C2::State </ID>
+			<Command> CHANnel2:STATe </Command> 
+		</Connection>
+		 <Connection  DataType="boolean">		
+			<ID> Channel::C3::State </ID>
+			<Command> CHANnel3:STATe </Command> 
+		</Connection>
+		 <Connection  DataType="boolean">		
+			<ID> Channel::C4::State </ID>
+			<Command> CHANnel4:STATe </Command> 
+		</Connection>
+		 <Connection  DataType="boolean">		
+			<ID> Channel::C1::Invert </ID>
+			<Command> CHANnel1:INVert </Command> 
+		</Connection>
+		 <Connection  DataType="boolean">		
+			<ID> Channel::C2::Invert </ID>
+			<Command> CHANnel2:INVert </Command> 
+		</Connection>
+		 <Connection  DataType="boolean">		
+			<ID> Channel::C3::Invert </ID>
+			<Command> CHANnel3:INVert </Command> 
+		</Connection>
+		 <Connection  DataType="boolean">		
+			<ID> Channel::C4::Invert </ID>
+			<Command> CHANnel4:INVert </Command> 
+		</Connection>
+		 <Connection  DataType="double">		
+			<ID> Channel::C1::Offset </ID>
+			<Command> CHANnel1:OFFSet </Command> 
+		</Connection>
+		 <Connection  DataType="double">		
+			<ID> Channel::C2::Offset </ID>
+			<Command> CHANnel2:OFFSet </Command> 
+		</Connection>
+		 <Connection  DataType="double">		
+			<ID> Channel::C3::Offset </ID>
+			<Command> CHANnel3:OFFSet </Command> 
+		</Connection>
+		 <Connection  DataType="double">		
+			<ID> Channel::C4::Offset </ID>
+			<Command> CHANnel4:OFFSet </Command> 
+		</Connection>
+		 <Connection  DataType="double">		
+			<ID> Channel::C1::Scale </ID>
+			<Command> CHANnel1:SCALe </Command> 
+		</Connection>
+		 <Connection  DataType="double">		
+			<ID> Channel::C2::Scale </ID>
+			<Command> CHANnel2:SCALe </Command> 
+		</Connection>
+		 <Connection  DataType="double">		
+			<ID> Channel::C3::Scale </ID>
+			<Command> CHANnel3:SCALe </Command> 
+		</Connection>
+		 <Connection  DataType="double">		
+			<ID> Channel::C4::Scale </ID>
+			<Command> CHANnel4:SCALe </Command> 
+		</Connection>
+		<Connection  DataType="GuiSelection">		
+			<ID> Channel::C1::Coupling </ID>
+			<Command> CHANnel1:COUPling </Command> 
+			<Selection> DC</Selection>
+			<Selection> DCL</Selection>
+			<Selection> AC</Selection>
+		</Connection>
+		<Connection  DataType="GuiSelection">		
+			<ID> Channel::C2::Coupling </ID>
+			<Command> CHANnel2:COUPling </Command> 
+			<Selection> DC</Selection>
+			<Selection> DCL</Selection>
+			<Selection> AC</Selection>
+		</Connection>
+		<Connection  DataType="GuiSelection">		
+			<ID> Channel::C3::Coupling </ID>
+			<Command> CHANnel3:COUPling </Command> 
+			<Selection> DC</Selection>
+			<Selection> DCL</Selection>
+			<Selection> AC</Selection>
+		</Connection>
+		<Connection  DataType="GuiSelection">		
+			<ID> Channel::C4::Coupling </ID>
+			<Command> CHANnel4:COUPling </Command> 
+			<Selection> DC</Selection>
+			<Selection> DCL</Selection>
+			<Selection> AC</Selection>
+		</Connection>
+		<Connection  DataType="GuiSelection">		
+			<ID> Trigger::Mode </ID>
+			<Command> TRIGger:MODE </Command> 
+			<Selection> AUTO</Selection>
+			<Selection> NORMAL</Selection>
+			<Selection> FRE</Selection>			
+		</Connection>
+		<Connection  DataType="GuiSelection">		
+			<ID> Trigger::Edge::Slope </ID>
+			<Command> TRIGger1:EDGE:SLOPe </Command> 
+			<Selection> POS</Selection>
+			<Selection> NEG</Selection>
+			<Selection> EITH</Selection>			
+		</Connection>
+		<Connection  DataType="GuiSelection">		
+			<ID> Trigger::Channel </ID>
+			<Command> TRIG:SOUR </Command> 
+			<Selection> CHAN1</Selection>
+			<Selection> CHAN2</Selection>
+			<Selection> CHAN3</Selection>	
+			<Selection> CHAN4</Selection>			
+			<Selection> EXT</Selection>	
+		</Connection>
+		<Connection  DataType="GuiSelection" Flag="r">		
+			<ID> Trigger::Run </ID>
+			<Command>  </Command> 
+			<Selection> RUNContinous </Selection>
+			<Selection> RUNSingle </Selection>
+			<Selection> STOP </Selection>	
+		</Connection>
+				<Connection DataType="GuiSelection">		
+			<ID> Trigger::Type </ID>
+			<Command> TRIGger1:TYPE </Command> 
+			<Selection> EDGE </Selection>
+		</Connection>
+		<Connection  DataType="double">		
+			<ID> Channel::C1::Trigger::Level </ID>
+			<Command> TRIGger1:LEVel1 </Command> 
+		</Connection>	
+		<Connection  DataType="double">		
+			<ID> Channel::C2::Trigger::Level </ID>
+			<Command> TRIGger1:LEVel2 </Command> 
+		</Connection>	
+		<Connection  DataType="double">		
+			<ID> Channel::C3::Trigger::Level </ID>
+			<Command> TRIGger1:LEVel3 </Command> 
+		</Connection>	
+		<Connection  DataType="double">		
+			<ID> Channel::C4::Trigger::Level </ID>
+			<Command> TRIGger1:LEVel4 </Command> 
+		</Connection>			
+				<Connection  DataType="double">		
+			<ID> Channel::Ext::Trigger::Level </ID>
+			<Command> TRIGger1:LEVel5 </Command> 
+		</Connection>	
+		</Connection>			
+		<Connection  DataType="double">		
+			<ID> Aquisition::TimePerDiv </ID>
+			<Command> TIMebase:SCALe </Command> 
+		</Connection>		
+		<Connection  DataType="double">		
+			<ID> Aquisition::TimeHorizontalPos </ID>
+			<Command> TIMebase:HORizontal:POSition </Command> 
+		</Connection>
+		<Connection  DataType="double">		
+			<ID> Aquisition::SampleRate </ID>
+			<Command> ACQuire:SRATe </Command> 
+		</Connection>
+		<Connection  DataType="double" Flag = "r">		
+			<ID> Aquisition::Count </ID>
+			<Command> ACQuire:CURrent </Command> 
+		</Connection>
+	</Visa>
+</LEDevice>
+	
