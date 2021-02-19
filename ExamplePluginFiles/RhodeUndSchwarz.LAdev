@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<LEDevice DevicePlugin = "TektronixPlugin.dll" DeviceName = "RuSOsci">
+<LEDevice DevicePlugin = "RhodeUndSchwarzPlugind.dll" DeviceName = "RuSOsci">
 	<Connection IP = "10.0.2.2"/>
 	<Visa>
 <!-- CHANNEL 1-->	
@@ -150,7 +150,6 @@
 			<ID> Channel::Ext::Trigger::Level </ID>
 			<Command> TRIGger1:LEVel5 </Command> 
 		</Connection>	
-		</Connection>			
 		<Connection  DataType="double">		
 			<ID> Aquisition::TimePerDiv </ID>
 			<Command> TIMebase:SCALe </Command> 
