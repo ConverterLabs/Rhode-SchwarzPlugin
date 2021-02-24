@@ -105,6 +105,15 @@ void WorkClass::process()
 
     this->SymbolsPublished = true;
 
+    QStringList ErrorStates = this->Osci.CheckStates(StateRequests);
+    if(ErrorStates.size())
+    {
+        for(auto itt : ErrorStates)
+            Messenger.Error("Visa Command: " + itt + " not found!");
+        Error = true;
+    }
+
+
     // First Loop
     while(!Abort())
     {
@@ -124,14 +133,7 @@ void WorkClass::process()
                 {
                     if(_data.GetDataRaw() != this->m_data[ID].GetDataRaw())
                     {
-                          if(_data.GetDataType().compare("GuiSelection")==0)
-                          {
-                                  this->Osci.write(this->StateSetCommands[ID] + "\"" + _data.GetGuiSelection().first + "\"'",ID);
-                          }
-                          else
-                          {
-                                  this->Osci.write(this->StateSetCommands[ID] + _data.GetString() + "'",ID);
-                          }
+                          this->Osci.write(this->StateSetCommands[ID] + _data.GetString(),ID);
                           this->m_data[ID].SetDataTimeOut(_data.GetDataRaw(), ID, GetMessenger());
                     }
                 }
@@ -179,13 +181,18 @@ void WorkClass::process()
 
         if(ReadStreams || SingleShotFired)
         {
-            ChannelReader.ReadChannel(1);
-            ChannelReader.ReadChannel(2);
-            ChannelReader.ReadChannel(3);
-            ChannelReader.ReadChannel(4);
-            uint32_t tmp = m_data[DeviceName + "::Aquisition::Counter"].GetUInt32_tData();
+            int Channel = 1;
+            while(m_data.find(DeviceName + "::Channel::C"+ QString::number(Channel) +"::State") != m_data.end())
+            {
+                ChannelReader.ReadChannel(Channel);
+                Channel++;
+            }
+            QString CounterID = DeviceName + "::ChannelRead::Counter";
+            uint32_t tmp = m_data[CounterID].GetUInt32_tData();
             tmp++;
-            m_data[DeviceName + "::Aquisition::Counter"].SetDataKeepType(tmp);
+            m_data[CounterID].SetDataKeepType(tmp);
+            this->MessageSender("set", CounterID,  m_data[CounterID]);
+
             ReadStreams = 0;
         }
 
@@ -218,8 +225,8 @@ void WorkClass::process()
 
 void WorkClass::ParseSetCommand(const QString ID,InterfaceData  _data)
 {
-    if(_data.GetType().compare("State"))
-    {
+    if(_data.GetType().compare("State") )
+    {       
         LockSendQueque.lock();
             SendQueque.push_back(QPair<QString,InterfaceData>(ID,_data));
         LockSendQueque.unlock();

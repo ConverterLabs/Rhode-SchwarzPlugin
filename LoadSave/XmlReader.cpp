@@ -19,6 +19,9 @@
 ***********************************************************************************
 ***********************************************************************************/
 
+
+// TODO Read and write flags
+
 #include "XmlReader.h"
 #include <QDebug>
 #include <QFile>
@@ -98,7 +101,8 @@ void XmlReader::readVisa()
    }
 }
 
-void XmlReader::ReadDouble(bool ReadOnly)
+
+void XmlReader::ReadDouble(bool ReadOnly, bool WriteOnly)
 {
     InterfaceData Data;
     if(ReadOnly)
@@ -120,19 +124,12 @@ void XmlReader::ReadDouble(bool ReadOnly)
            reader.skipCurrentElement();
    }
 
-    if(!read_ID.isEmpty() && !read_Command.isEmpty())
-    {
-        StateRequests.push_back( read_Command + QString("?"));
-        auto ID = DeviceName + "::" + read_ID.trimmed();
-        StateIds.push_back(ID);
-        StateSetCommands[ID] = read_Command +" ";
-         m_data[ID] = Data;
-        emit Messenger.MessageSender("publish", ID,  Data);
-    }
+    AddState(read_ID, read_Command, Data, ReadOnly, WriteOnly);
+
 }
 
 
-void XmlReader::ReadInt(bool ReadOnly)
+void XmlReader::ReadInt(bool ReadOnly, bool WriteOnly)
 {
     InterfaceData Data;
     if(ReadOnly)
@@ -154,19 +151,12 @@ void XmlReader::ReadInt(bool ReadOnly)
            reader.skipCurrentElement();
    }
 
-    if(!read_ID.isEmpty() && !read_Command.isEmpty())
-    {
-        StateRequests.push_back( read_Command + QString("?"));
-        auto ID = DeviceName + "::" + read_ID.trimmed();
-        StateIds.push_back(ID);
-        StateSetCommands[ID] = read_Command +" ";
-        m_data[ID] = Data;
-        emit Messenger.MessageSender("publish", ID,  Data);
-    }
+    AddState(read_ID, read_Command, Data, ReadOnly, WriteOnly);
+
 }
 
 
-void XmlReader::ReadString(bool ReadOnly)
+void XmlReader::ReadString(bool ReadOnly, bool WriteOnly)
 {
     InterfaceData Data;
     if(ReadOnly)
@@ -188,19 +178,11 @@ void XmlReader::ReadString(bool ReadOnly)
            reader.skipCurrentElement();
    }
 
-    if(!read_ID.isEmpty() && !read_Command.isEmpty())
-    {
-        StateRequests.push_back( read_Command + QString("?"));
-        auto ID = DeviceName + "::" + read_ID.trimmed();
-        StateIds.push_back(ID);
-        StateSetCommands[ID] = read_Command +" ";
-         m_data[ID] = Data;
-        emit Messenger.MessageSender("publish", ID,  Data);
-    }
+    AddState(read_ID, read_Command, Data, ReadOnly, WriteOnly);
 }
 
 
-void XmlReader::ReadBoolean(bool ReadOnly)
+void XmlReader::ReadBoolean(bool ReadOnly, bool WriteOnly)
 {
     InterfaceData Data;
     if(ReadOnly)
@@ -222,18 +204,11 @@ void XmlReader::ReadBoolean(bool ReadOnly)
            reader.skipCurrentElement();
    }
 
-    if(!read_ID.isEmpty() && !read_Command.isEmpty())
-    {
-        StateRequests.push_back( read_Command + QString("?"));
-        auto ID = DeviceName + "::" + read_ID.trimmed();
-        StateIds.push_back(ID);
-        StateSetCommands[ID] = read_Command +" ";
-         m_data[ID] = Data;
-        emit Messenger.MessageSender("publish", ID,  Data);
-    }
+    AddState(read_ID, read_Command, Data, ReadOnly, WriteOnly);
+
 }
 
-void XmlReader::ReadGuiSelection(bool ReadOnly)
+void XmlReader::ReadGuiSelection(bool ReadOnly, bool WriteOnly)
 {
     InterfaceData Data;
     QStringList Selection;
@@ -261,15 +236,8 @@ void XmlReader::ReadGuiSelection(bool ReadOnly)
 
     Data.SetData(GuiSelection(Selection[0],Selection));
 
-    if(!read_ID.isEmpty() && !read_Command.isEmpty())
-    {
-        StateRequests.push_back( read_Command + QString("?"));
-        auto ID = DeviceName + "::" + read_ID.trimmed();
-        StateIds.push_back(ID);
-        StateSetCommands[ID] = read_Command +" ";
-         m_data[ID] = Data;
-        emit Messenger.MessageSender("publish", ID,  Data);
-    }
+    AddState(read_ID, read_Command, Data, ReadOnly, WriteOnly);
+
 }
 
 
@@ -280,20 +248,26 @@ void XmlReader::readVisaConnection()
     //Read DataType:
     QString DT = reader.attributes().value("DataType").trimmed().toString().toLower();
     bool ReadOnly = false;
+    bool WriteOnly = false;
+
     if(reader.attributes().hasAttribute("Flag"))
+    {
         if(reader.attributes().value("Flag").trimmed().toString().toLower() == "r")
             ReadOnly = true;
+        if(reader.attributes().value("Flag").trimmed().toString().toLower() == "w")
+            WriteOnly = true;
+    }
 
     if(DT == "double")
-            ReadDouble(ReadOnly);
+            ReadDouble(ReadOnly, WriteOnly);
     else if (DT == "string")
-            ReadString(ReadOnly);
+            ReadString(ReadOnly, WriteOnly);
     else if (DT == "boolean")
-            ReadBoolean(ReadOnly);
+            ReadBoolean(ReadOnly, WriteOnly);
     else if (DT == "guiselection")
-            ReadGuiSelection(ReadOnly);
+            ReadGuiSelection(ReadOnly, WriteOnly);
     else if (DT == "int")
-            ReadInt(ReadOnly);
+            ReadInt(ReadOnly, WriteOnly);
     else
         reader.raiseError("Data Type: " + DT + " is unknown. Known Types are int, double, string, boolean, guiselection!" );
 
@@ -309,4 +283,41 @@ void XmlReader::readIP()
 {
     IP = reader.attributes().value("IP").toString();
     reader.skipCurrentElement();
+}
+
+void XmlReader::AddState(QString read_ID, QString read_Command, InterfaceData Data, bool ReadOnly, bool WriteOnly)
+{
+
+    if(!read_ID.isEmpty() )
+    {
+        auto ID = DeviceName + "::" + read_ID.trimmed();
+        if(read_Command.isEmpty())
+        {
+            if(WriteOnly)
+            {
+                StateSetCommands[ID] = read_Command +" ";
+            }
+        }
+        else
+        {
+            if(WriteOnly)
+            {
+                StateSetCommands[ID] = read_Command +" ";
+            }
+            else if(ReadOnly)
+            {
+                StateRequests.push_back( read_Command + QString("?"));
+                StateIds.push_back(ID);
+            }
+            else
+            {
+                StateRequests.push_back( read_Command + QString("?"));
+                StateIds.push_back(ID);
+                StateSetCommands[ID] = read_Command +" ";
+            }
+        }
+        m_data[ID] = Data;
+        emit Messenger.MessageSender("publish", ID,  Data);
+
+    }
 }

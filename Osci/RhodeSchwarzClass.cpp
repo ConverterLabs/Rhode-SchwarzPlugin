@@ -147,6 +147,23 @@ QStringList RhodeSchwarz::read(QString command, QString logMsg)
     return AnswerParts;
 }
 
+QStringList RhodeSchwarz::CheckStates(QStringList CommandList)
+{
+    QString  logMsg = "";
+    QStringList ErrorCommands;
+
+    for(auto itt : CommandList)
+    {
+        QStringList Answers = read(itt,logMsg);
+        if(!Answers.size())
+        {
+            ErrorCommands.push_back(itt);
+        }
+    }
+
+    return ErrorCommands;
+}
+
 QStringList RhodeSchwarz::ReadState(QStringList CommandList)
 {
     QString  command;
