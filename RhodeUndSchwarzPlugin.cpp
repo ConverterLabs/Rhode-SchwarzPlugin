@@ -37,17 +37,21 @@ Tektronix_Class::Tektronix_Class(QObject* messenger_): messenger(messenger_)
 void Tektronix_Class::ThreadFinished()
 {
     ThreadFinishedSignal = true;
+    Worker = nullptr;
 }
 
 Tektronix_Class::~Tektronix_Class()
 {
-    if(Worker->isRunning())
+    if(Worker != nullptr)
     {
-        Work->Stop();
-        while(!Work->IsFinished())
-            QThread::msleep(1);
-        Worker->quit();
-        Worker->wait();
+        if(Worker->isRunning())
+        {
+            Work->Stop();
+            while(!Work->IsFinished())
+                QThread::msleep(1);
+            Worker->quit();
+            Worker->wait();
+        }
     }
 }
 
