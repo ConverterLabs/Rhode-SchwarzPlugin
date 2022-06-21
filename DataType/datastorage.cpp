@@ -33,10 +33,11 @@ DataStorage::~DataStorage()
 
 DataStorage& DataStorage::operator =( InterfaceData& Input)
 {
-    this->SetDataRaw(Input.GetData());
-    this->SetDataType(Input.GetDataType());
+  this->SetDataType(Input.GetDataType());
     this->SetType(Input.GetType());
+    this->SetDataRaw(Input.GetData());
     this->SetStateDependency(Input.GetStateDependency());
+
 
     return *this;
 }
